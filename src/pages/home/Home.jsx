@@ -1,33 +1,36 @@
 import React from 'react';
 
-import { useHomeDataFetch } from 'pages/home/hooks/useHomeDataFetch';
-
 import { MainLayout } from 'components/MainLayout';
-import { VirtualizedList } from 'components/VirtualizedList';
-import { SuperheroCard } from 'components/SuperheroCard/SuperheroCard';
+import { VirtualizedGrid } from 'components/VirtualizedList';
+import { SuperheroCard } from 'components/SuperheroCard';
+import { useGetSuperheroesList } from 'redux-store/hooks/useGetSuperheroesList';
 
 const Home = () => {
-  const { superheroes, isLoading } = useHomeDataFetch();
+  const { isLoading, isSuccess, superheroesList } = useGetSuperheroesList();
 
   return (
     <MainLayout title={'Home'}>
-      {isLoading ? 'Loading...' : (
-        <VirtualizedList
-          itemCount={superheroes.length}
-          itemSize={500}
-          renderItem={({ index, isScrolling }) => {
-            const { biography, images } = superheroes[index];
+      {isLoading
+        ? 'Loading...'
+        : isSuccess
+          ? (
+            <VirtualizedGrid
+              data={superheroesList}
+              of={5}
+              rowHeight={450}
+              renderItem={({ item }) => {
+                const { name, biography, images } = item;
 
-            return (
-              <SuperheroCard
-                image={images.md}
-                title={biography.fullName}
-                description={biography.publisher}
-              />
-            );
-          }}
-        />
-      )}
+                return (
+                  <SuperheroCard
+                    image={images.md}
+                    title={name}
+                    description={biography.publisher}
+                  />
+                );
+              }}
+            />
+          ) : null}
     </MainLayout>
   );
 };

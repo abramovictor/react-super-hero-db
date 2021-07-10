@@ -20,87 +20,78 @@ import HomeIcon from '@material-ui/icons/Home';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 
-import Link from 'react-router-dom/Link';
+import { Link } from 'react-router-dom';
 
 const drawerWidth = 280;
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex'
-  },
-  appBar: {
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: drawerWidth,
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  hide: {
-    display: 'none',
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-  },
-  drawerPaper: {
-    width: drawerWidth,
-  },
-  drawerHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
-    justifyContent: 'flex-end',
-  },
-  appBarHeader: {
-    '&::before': {
-      content: '""',
-      display: 'block',
+const useStyles = makeStyles(theme => {
+  return ({
+    root: {
+      display: 'flex',
+    },
+    appBar: {
+      boxShadow: theme.shadows[10],
+      transition: theme.transitions.create(['margin', 'width'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+    },
+    appBarShift: {
+      width: `calc(100% - ${drawerWidth}px)`,
+      marginLeft: drawerWidth,
+      transition: theme.transitions.create(['margin', 'width'], {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    },
+    menuButton: {
+      marginRight: theme.spacing(2),
+    },
+    hide: {
+      display: 'none',
+    },
+    drawer: {
+      position: 'absolute',
+      width: drawerWidth,
+      flexShrink: 0,
+    },
+    drawerPaper: {
+      width: drawerWidth,
+      boxShadow: theme.shadows[20],
+    },
+    drawerHeader: {
+      display: 'flex',
+      alignItems: 'center',
       padding: theme.spacing(0, 1),
       // necessary for content to be below app bar
       ...theme.mixins.toolbar,
+      justifyContent: 'flex-end',
     },
-  },
-  content: {
-    display: 'flex',
-    flexDirection: 'column',
-    flexGrow: 1,
-    height: '100vh',
-    minHeight: '500px',
-    padding: theme.spacing(3),
-    paddingRight: 0,
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginLeft: -drawerWidth,
-  },
-  contentContainer: {
-    flexGrow: 1,
-  },
-  contentShift: {
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
-  },
-  link: {
-    display: 'flex',
-    width: '100%',
-  },
-}));
+    appBarHeader: {
+      '&::before': {
+        content: '""',
+        display: 'block',
+        padding: theme.spacing(0, 1),
+        // necessary for content to be below app bar
+        ...theme.mixins.toolbar,
+      },
+    },
+    content: {
+      display: 'flex',
+      flexDirection: 'column',
+      flexGrow: 1,
+      height: '100vh',
+      minHeight: '500px',
+    },
+    contentContainer: {
+      flexGrow: 1,
+    },
+    link: {
+      display: 'flex',
+      width: '100%',
+    },
+  });
+});
 
 export const MainLayout = props => {
   const { title, children } = props;
@@ -167,7 +158,7 @@ export const MainLayout = props => {
           </ListItem>
         </List>
       </Drawer>
-      <main className={clsx(classes.content, classes.appBarHeader, { [classes.contentShift]: open })}>
+      <main className={clsx(classes.content, classes.appBarHeader)}>
         <div className={classes.contentContainer}>
           {children}
         </div>
