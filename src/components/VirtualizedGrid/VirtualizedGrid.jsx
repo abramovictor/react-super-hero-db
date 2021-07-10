@@ -62,5 +62,5 @@ export const VirtualizedGrid = props => {
 };
 
 if (process.env.NODE_ENV !== 'production') {
-  VirtualizedGrid.displayName = 'VirtualizedList';
+  VirtualizedGrid.displayName = 'VirtualizedGrid';
 }

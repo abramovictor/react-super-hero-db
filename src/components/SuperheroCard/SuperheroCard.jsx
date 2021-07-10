@@ -6,8 +6,12 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import IconButton  from '@material-ui/core/IconButton';
+import Favorite from '@material-ui/icons/Favorite';
+import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
+
+import { useFavoriteSuperhero } from 'redux-store/hooks/useFavoriteSuperhero';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -35,8 +39,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const SuperheroCard = props => {
-  const { image, title, description } = props;
+  const { id, image, title, description } = props;
   const classes = useStyles();
+  const { isFavorite, toggle } = useFavoriteSuperhero(id);
 
   return (
     <Card className={classes.container}>
@@ -57,13 +62,10 @@ export const SuperheroCard = props => {
           </CardContent>
         </div>
       </CardActionArea>
-      <CardActions className={classes.footer}>
-        <Button size="small" color="primary">
-          Share
-        </Button>
-        <Button size="small" color="primary">
-          Learn More
-        </Button>
+      <CardActions>
+        <IconButton onClick={toggle}>
+          {isFavorite ? <Favorite/> : <FavoriteBorder/>}
+        </IconButton>
       </CardActions>
     </Card>
   );

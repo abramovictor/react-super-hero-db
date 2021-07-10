@@ -1,1 +1,1 @@
-export { VirtualizedGrid } from 'components/VirtualizedList/VirtualizedGrid';
+export { VirtualizedList } from 'components/VirtualizedList/VirtualizedList';
