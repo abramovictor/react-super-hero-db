@@ -1,57 +1,76 @@
-import { VirtualizedList } from 'components/VirtualizedList';
-import React from 'react';
-import Skeleton from '@material-ui/lab/Skeleton';
+import React, { useState } from 'react';
+import { withStyles } from '@material-ui/core/styles';
 
+import Grid from '@material-ui/core/Grid';
+import ViewList from '@material-ui/icons/ViewList';
+import ViewModule from '@material-ui/icons/ViewModule';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+
+import { useGetSuperheroesIds } from 'redux-store/hooks/useGetSuperheroesIds';
+
+import { Wrapper } from 'components/Wrapper';
+import { SearchBar } from 'components/SearchBar';
 import { MainLayout } from 'components/MainLayout';
-import { VirtualizedGrid } from 'components/VirtualizedGrid';
 import { SuperheroCard } from 'components/SuperheroCard';
-import { useToggle } from 'react-use';
-import { useGetSuperheroesList } from 'redux-store/hooks/useGetSuperheroesList';
+import { VirtualizedGrid } from 'components/VirtualizedGrid';
+
+const StyledToggleButtonGroup = withStyles(theme => ({
+  grouped: {
+    border: 'none',
+    '&:not(:first-child)': {
+      borderRadius: theme.shape.borderRadius,
+    },
+    '&:first-child': {
+      borderRadius: theme.shape.borderRadius,
+    },
+  },
+}))(ToggleButtonGroup);
 
 const Home = () => {
-  const { isLoading, isSuccess, superheroesList } = useGetSuperheroesList();
-  const [isGrid, toggleIsGrid] = useToggle(false);
+  const { isLoading, isSuccess, superheroesIds } = useGetSuperheroesIds();
+  const [layout, setLayout] = useState('vertical');
 
+  const handleChangeLayout = () => {
+    setLayout(layout => layout === 'vertical' ? 'horizontal' : 'vertical');
+  };
+
+  const isVerticalLayout = layout === 'vertical';
   return (
-    <MainLayout title={'Home'}>
+    <MainLayout title={'Home'} appBarChildren={
+      <Grid container spacing={2}>
+        <Grid item xs>
+          <SearchBar/>
+        </Grid>
+        <Grid item xs={'auto'}>
+          <StyledToggleButtonGroup
+            exclusive
+            size={'small'}
+            value={layout}
+            onChange={handleChangeLayout}
+          >
+            <ToggleButton value={'vertical'}>
+              <ViewModule/>
+            </ToggleButton>
+            <ToggleButton value={'horizontal'}>
+              <ViewList/>
+            </ToggleButton>
+          </StyledToggleButtonGroup>
+        </Grid>
+      </Grid>
+    }>
       {isLoading
         ? 'Loading...'
-        : isSuccess
-          ? isGrid ? (
-            <VirtualizedGrid
-              data={superheroesList}
-              of={5}
-              rowHeight={450}
-              renderItem={({ item }) => {
-                const { id, name, biography, images } = item;
-                return (
-                  <SuperheroCard
-                    id={id}
-                    image={images.md}
-                    title={name}
-                    description={biography.publisher}
-                  />
-                );
-              }}
-            />
-          ) : (
-            <VirtualizedList
-              data={superheroesList}
-              itemHeight={250}
-              renderItem={({ item }) => {
-                const { id, name, biography, images } = item;
-                return (
-                  <SuperheroCard
-                    id={id}
-                    image={images.md}
-                    title={name}
-                    description={biography.publisher}
-                  />
-                );
-              }}
-            />
-          )
-          : null}
+        : isSuccess ? (
+          <VirtualizedGrid
+            data={superheroesIds}
+            of={isVerticalLayout ? 5 : 1}
+            rowHeight={isVerticalLayout ? 450 : 175}
+            renderItem={({ item }) => (
+              <SuperheroCard id={item} layout={layout}/>
+            )}
+          />
+        ) : null}
     </MainLayout>
   );
 };

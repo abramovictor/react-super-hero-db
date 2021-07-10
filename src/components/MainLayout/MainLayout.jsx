@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
-
 import { makeStyles } from '@material-ui/core/styles';
 
+import { Link } from 'react-router-dom';
+import Grid from '@material-ui/core/Grid';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -20,7 +21,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 
-import { Link } from 'react-router-dom';
+import { Wrapper } from 'components/Wrapper';
 
 const drawerWidth = 280;
 
@@ -43,6 +44,10 @@ const useStyles = makeStyles(theme => {
         easing: theme.transitions.easing.easeOut,
         duration: theme.transitions.duration.enteringScreen,
       }),
+    },
+    appBarInner: {
+      display: 'flex',
+      flexGrow: 1,
     },
     menuButton: {
       marginRight: theme.spacing(2),
@@ -94,7 +99,7 @@ const useStyles = makeStyles(theme => {
 });
 
 export const MainLayout = props => {
-  const { title, children } = props;
+  const { title, children, appBarChildren } = props;
 
   const [open, setOpen] = useState(false);
 
@@ -108,6 +113,7 @@ export const MainLayout = props => {
     <div className={classes.root}>
       <AppBar
         position={'fixed'}
+        color={'default'}
         className={clsx(classes.appBar, { [classes.appBarShift]: open })}
       >
         <Toolbar>
@@ -122,6 +128,15 @@ export const MainLayout = props => {
           <Typography noWrap variant={'h6'}>
             {title}
           </Typography>
+          <div className={classes.appBarInner}>
+            <Grid container justifyContent={'flex-end'}>
+              <Grid item xs={10}>
+                <Wrapper>
+                  {appBarChildren}
+                </Wrapper>
+              </Grid>
+            </Grid>
+          </div>
         </Toolbar>
       </AppBar>
       <Drawer

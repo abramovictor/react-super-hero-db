@@ -7,8 +7,14 @@ export const rootReducer = combineReducers({
   favoriteSuperheroes: favoriteSuperheroesReducer,
 });
 
-export const selectSuperheroesList = state =>
-  fromSuperheroes.selectSuperheroesList(state.superheroes);
+export const selectSuperheroById = (state, id) =>
+  fromSuperheroes.selectSuperheroById(state.superheroes, id);
+
+export const selectSuperheroFromPoolById = (state, id) =>
+  fromSuperheroes.selectSuperheroFromPoolById(state.superheroes, id);
+
+export const selectSuperheroesIds = state =>
+  fromSuperheroes.selectSuperheroesIds(state.superheroes);
 
 export const selectSuperheroesError = state =>
   fromSuperheroes.selectSuperheroesError(state.superheroes);

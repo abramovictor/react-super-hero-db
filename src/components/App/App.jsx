@@ -3,18 +3,35 @@ import { Provider } from 'react-redux';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+
 import CssBaseline from '@material-ui/core/CssBaseline';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { store } from 'redux-store';
 
+import { Fullscreen } from 'components/Fullscreen';
+
 import { useScrollRestoration } from 'components/App/hooks/useScrollRestoration';
 import { ThemeProvider } from 'components/App/ThemeProvider';
+
+const fallback = (
+  <Fullscreen>
+    <CircularProgress size={100}/>
+  </Fullscreen>
+);
 
 const Home = React.lazy(() => {
   return import(
     /* webpackChunkName: "HomePage" */
     /* webpackPreload: true */
     'pages/home');
+});
+
+const Superhero = React.lazy(() => {
+  return import(
+    /* webpackChunkName: "SuperheroPage" */
+    /* webpackPreload: true */
+    'pages/superhero');
 });
 
 const queryClient = new QueryClient();
@@ -31,8 +48,13 @@ export const App = () => {
           <Router>
             <Switch>
               <Route path={'/'} exact>
-                <Suspense fallback={'Loading...'}>
+                <Suspense fallback={fallback}>
                   <Home/>
+                </Suspense>
+              </Route>
+              <Route path={'/superhero/:id'} exact>
+                <Suspense fallback={fallback}>
+                  <Superhero/>
                 </Suspense>
               </Route>
             </Switch>

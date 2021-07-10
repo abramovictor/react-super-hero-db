@@ -4,7 +4,7 @@ import { SuperheroApi } from 'api/superhero';
 import * as fromRoot from 'redux-store/rootReducer';
 
 export const fetchSuperheroesList = createAsyncThunk(
-  'superheroesList',
+  'charactersList',
   async () => {
     try {
       return await SuperheroApi.fetchAllCharacters();
@@ -20,56 +20,95 @@ export const fetchSuperheroesList = createAsyncThunk(
   },
 );
 
+export const fetchSuperheroById = createAsyncThunk(
+  'character',
+  async ({ id }) => {
+    try {
+      return await SuperheroApi.fetchCharacterById({ id });
+    } catch (e) {
+      throw e;
+    }
+  },
+  {
+    condition: ({ id }, { getState }) => {
+      const superhero = fromRoot.selectSuperheroById(getState(), id);
+      return !superhero;
+    },
+  },
+);
+
 const superheroesSlice = createSlice({
   name: 'superheroes',
   initialState: {
-    isIdle: true,
-    isLoading: false,
-    isError: false,
-    isSuccess: false,
-    response: null,
-    error: null,
+    characters: {
+      isLoading: false,
+      isError: false,
+      isSuccess: false,
+      response: null,
+      error: null,
+    },
+    charactersPool: {
+      isLoading: false,
+      isError: false,
+      isSuccess: false,
+      error: null,
+      response: {},
+    },
   },
   extraReducers: {
     [fetchSuperheroesList.pending]: state => {
-      state.isIdle = false;
-      state.isLoading = true;
+      state.characters.isLoading = true;
     },
     [fetchSuperheroesList.fulfilled]: (state, action) => {
-      state.isLoading = false;
-      state.isSuccess = true;
-      state.response = action.payload;
+      state.characters.isLoading = false;
+      state.characters.isSuccess = true;
+      state.characters.response = action.payload;
     },
     [fetchSuperheroesList.rejected]: (state, action) => {
-      state.isLoading = false;
-      state.isError = true;
-      state.error = action.payload;
+      state.characters.isLoading = false;
+      state.characters.isError = true;
+      state.characters.error = action.payload;
     },
   },
 });
 
 export default superheroesSlice.reducer;
 
-export const selectSuperheroesList = state => {
-  if (state.response) {
-    return state.response.data;
+export const selectSuperheroFromPoolById = (state, id) => {
+  if (id in state.charactersPool.response) {
+    return state.charactersPool.response[id];
   }
-  return null;
+};
+
+export const selectSuperheroById = (state, id) => {
+  const superheroFromPool = selectSuperheroFromPoolById(state, id);
+
+  if (superheroFromPool) {
+    return superheroFromPool;
+  }
+
+  if (state.characters.response) {
+    return state.characters.response.pool[id];
+  }
+};
+
+export const selectSuperheroesIds = state => {
+  if (state.characters.response) {
+    return state.characters.response.ids;
+  }
 };
 
 export const selectSuperheroesError = state => {
-  if (state.error) {
-    return state.error;
+  if (state.characters.error) {
+    return state.characters.error;
   }
-  return null;
 };
 
 export const selectSuperheroesFetchingStatus = createSelector(
   [
-    state => state.isIdle,
-    state => state.isLoading,
-    state => state.isSuccess,
-    state => state.isError,
+    state => state.characters.isLoading,
+    state => state.characters.isSuccess,
+    state => state.characters.isError,
   ],
-  (isIdle, isLoading, isSuccess, isError) => ({ isIdle, isLoading, isSuccess, isError }),
+  (isLoading, isSuccess, isError) => ({ isLoading, isSuccess, isError }),
 );
