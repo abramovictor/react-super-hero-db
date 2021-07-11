@@ -63,7 +63,7 @@ export const SuperheroCard = props => {
   const { id, layout = 'vertical' } = props;
   const classes = useStyles();
   const { isFavorite, toggle } = useFavoriteSuperhero(id);
-  const { superhero = {} } = useSelectSuperheroById(id)
+  const { superhero = {} } = useSelectSuperheroById(id);
 
   const isVerticalLayout = layout === 'vertical';
   return (
@@ -81,7 +81,7 @@ export const SuperheroCard = props => {
               [classes.imageVertical]: isVerticalLayout,
               [classes.imageHorizontal]: !isVerticalLayout,
             })}
-            image={superhero.images?.url}
+            image={superhero.image?.url}
             title={superhero.name}
           />
           <CardContent>

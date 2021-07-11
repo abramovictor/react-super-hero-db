@@ -18,8 +18,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import HomeIcon from '@material-ui/icons/Home';
-import AddBoxIcon from '@material-ui/icons/AddBox';
-import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 
 import { Wrapper } from 'components/Wrapper';
 
@@ -64,14 +63,6 @@ const useStyles = makeStyles(theme => {
       width: drawerWidth,
       boxShadow: theme.shadows[20],
     },
-    drawerHeader: {
-      display: 'flex',
-      alignItems: 'center',
-      padding: theme.spacing(0, 1),
-      // necessary for content to be below app bar
-      ...theme.mixins.toolbar,
-      justifyContent: 'flex-end',
-    },
     appBarHeader: {
       '&::before': {
         content: '""',
@@ -98,7 +89,7 @@ const useStyles = makeStyles(theme => {
   });
 });
 
-export const MainLayout = props => {
+export const Layout = props => {
   const { title, children, appBarChildren } = props;
 
   const [open, setOpen] = useState(false);
@@ -120,10 +111,10 @@ export const MainLayout = props => {
           <IconButton
             edge={'start'}
             color={'inherit'}
-            className={clsx(classes.menuButton, open && classes.hide)}
-            onClick={handleDrawerOpen}
+            className={classes.menuButton}
+            onClick={open ? handleDrawerClose : handleDrawerOpen}
           >
-            <MenuIcon/>
+            {open ? <ChevronLeftIcon/> : <MenuIcon/>}
           </IconButton>
           <Typography noWrap variant={'h6'}>
             {title}
@@ -146,12 +137,6 @@ export const MainLayout = props => {
         anchor={'left'}
         classes={{ paper: classes.drawerPaper }}
       >
-        <div className={classes.drawerHeader}>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon/>
-          </IconButton>
-        </div>
-        <Divider/>
         <List>
           <ListItem ContainerComponent={'li'}>
             <Button component={Link} to={'/'} className={classes.link}>
@@ -159,16 +144,11 @@ export const MainLayout = props => {
               <ListItemText primary={'Home'}/>
             </Button>
           </ListItem>
+          <Divider/>
           <ListItem ContainerComponent={'li'}>
-            <Button component={Link} to={'/'} className={classes.link}>
-              <ListItemIcon><AddBoxIcon/></ListItemIcon>
-              <ListItemText primary={'Add new superhero'}/>
-            </Button>
-          </ListItem>
-          <ListItem ContainerComponent={'li'}>
-            <Button component={Link} to={'/'} className={classes.link}>
-              <ListItemIcon><AssignmentIndIcon/></ListItemIcon>
-              <ListItemText primary={'Profile'}/>
+            <Button component={Link} to={'/favorites'} className={classes.link}>
+              <ListItemIcon><FavoriteIcon/></ListItemIcon>
+              <ListItemText primary={'Favorites'}/>
             </Button>
           </ListItem>
         </List>
@@ -181,3 +161,7 @@ export const MainLayout = props => {
     </div>
   );
 };
+
+if (process.env.NODE_ENV !== 'production') {
+  Layout.displayName = 'Layout';
+}

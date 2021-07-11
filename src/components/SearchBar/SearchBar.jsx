@@ -6,8 +6,10 @@ import debounce from 'lodash/debounce';
 import { SuperheroApi } from 'api/superhero';
 
 import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { Link } from 'react-router-dom';
 
 const useSearchSuperhero = () => {
   const [name, setName] = useState('');
@@ -28,7 +30,14 @@ const useSearchSuperhero = () => {
   return { searchedList: name.length > 0 ? data : [], isFetching, searchByName };
 };
 
-const useStyles = makeStyles({ searchBar: { flexGrow: 1 } });
+const useStyles = makeStyles({
+  searchBar: { flexGrow: 1 },
+  option: {
+    display: 'block',
+    width: '100%',
+    textDecoration: 'none',
+  },
+});
 
 export const SearchBar = () => {
   const classes = useStyles();
@@ -41,6 +50,17 @@ export const SearchBar = () => {
       options={searchedList}
       className={classes.searchBar}
       getOptionLabel={superhero => superhero.name}
+      renderOption={option => (
+        <Typography
+          noWrap
+          component={Link}
+          to={`/superhero/${option.id}`}
+          color={'primary'}
+          className={classes.option}
+        >
+          {option.name}
+        </Typography>
+      )}
       renderInput={params => (
         <TextField
           {...params}

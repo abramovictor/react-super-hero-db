@@ -34,6 +34,13 @@ const Superhero = React.lazy(() => {
     'pages/superhero');
 });
 
+const Favorites = React.lazy(() => {
+  return import(
+    /* webpackChunkName: "FavoritesPage" */
+    /* webpackPreload: true */
+    'pages/favorites');
+});
+
 const queryClient = new QueryClient();
 
 export const App = () => {
@@ -55,6 +62,11 @@ export const App = () => {
               <Route path={'/superhero/:id'} exact>
                 <Suspense fallback={fallback}>
                   <Superhero/>
+                </Suspense>
+              </Route>
+              <Route path={'/favorites'} exact>
+                <Suspense fallback={fallback}>
+                  <Favorites/>
                 </Suspense>
               </Route>
             </Switch>

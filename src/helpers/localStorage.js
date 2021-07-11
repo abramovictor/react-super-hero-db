@@ -1,4 +1,4 @@
-const serializer = value => {
+export const serializer = value => {
   try {
     return JSON.stringify(value);
   } catch {
@@ -6,7 +6,7 @@ const serializer = value => {
   }
 };
 
-const deserializer = value => {
+export const deserializer = value => {
   try {
     return JSON.parse(value);
   } catch {

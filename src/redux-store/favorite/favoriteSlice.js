@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSelector, createSlice } from '@reduxjs/toolkit';
 import { localStorage } from 'helpers/localStorage';
 
 export const favoriteSlice = createSlice({
@@ -28,3 +28,8 @@ export const selectIsFavoriteSuperhero = (state, id) => {
 
   return false;
 };
+
+export const selectFavoritesIds = createSelector(
+  [state => state],
+  state => Object.keys(state).filter(id => state[id]),
+);
